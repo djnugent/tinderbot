@@ -7,7 +7,7 @@ import requests
 
 class Tinderbot():
 
-    SWIPE_RATE = 3
+    SWIPE_RATE = 2
 
     def __init__(self,access_token,user_id,target,loc,interval):
         self.access_token = access_token
@@ -16,6 +16,7 @@ class Tinderbot():
         self.loc = loc
         self.interval = interval
         self.server = None
+        self.pwd = "hits/" + strftime("%d-%b-%Y", gmtime())
 
     def start(self):
         #start file server
@@ -38,9 +39,9 @@ class Tinderbot():
             if(user.name == target):
                 self.process_hit(user)
 
-            self.session.dislike(user)
-            print("swipe: " + str(count))
-            time.sleep(1.0/self.SWIPE_RATE)
+            user.dislike()
+            #print("swipe: " + str(count))
+            sleep(1.0/self.SWIPE_RATE)
             count += 1
         t = strftime("%a, %d %b %Y %H:%M:%S", gmtime())
         print(t + " - Swiped " + str(count) + "users")
@@ -48,10 +49,10 @@ class Tinderbot():
     def process_hit(self,user):
             pic_url = user.photos[0]
             img_data = requests.get(pic_url).content
-            file_loc = "hits/" + self.pwd + "/" + str(user.id) + ".jpg"
+            file_loc = self.pwd + "/" + str(user.id) + ".jpg"
             with open(file_loc, 'wb') as handler:
                 handler.write(img_data)
-            print(">>>HIT: id: " + str(user.id) + " age: " + str(user.age) + " photoURl: " + pic_url)
+            print(">>>HIT: id: " + str(user.id) + " name: " + user.name + " age: " + str(user.age) + " photoURl: " + pic_url)
 
     def check_state(self):
         current_date = "hits/" + strftime("%d-%b-%Y", gmtime())
@@ -59,6 +60,7 @@ class Tinderbot():
             print("Making directory " + current_date)
             os.mkdir(current_date)
             self.pwd = current_date
+            self.session.update_location(self.loc[0],self.loc[1])
 
     def run(self):
         try:
