@@ -23,7 +23,7 @@ class Tinderbot():
 
         #start tinder session
         print("Starting Session")
-        self.session = pynder.Session(fb_id, access_token)
+        self.session = pynder.Session(self.user_id, self.access_token)
         print("Setting location")
         print(self.session.update_location(self.loc[0],self.loc[1])) # updates latitude and longitude for your profile
         print("Logged in as: " + str(self.session.profile))  # your profile. If you update its attributes they will be updated on Tinder.
@@ -31,14 +31,16 @@ class Tinderbot():
 
 
     def swipe_session(self):
+        print("swiping...")
         users = self.session.nearby_users(limit =10 ) # returns a list of users nearby
         count = 0
         for user in users:
             if(user.name == target):
                 self.process_hit(user)
-                self.session.dislike(user)
-                print("swipe")
-                time.sleep(1.0/self.SWIPE_RATE)
+
+            self.session.dislike(user)
+            print("swipe: " + str(count))
+            time.sleep(1.0/self.SWIPE_RATE)
             count += 1
         t = strftime("%a, %d %b %Y %H:%M:%S", gmtime())
         print(t + " - Swiped " + str(count) + "users")
@@ -82,5 +84,5 @@ if __name__== "__main__":
     target = "Kim"
     interval = 240
 
-    bot = Tinderbot(access_token,fb_id,loc,target,interval)
+    bot = Tinderbot(access_token,fb_id,target,loc,interval)
     bot.run()
