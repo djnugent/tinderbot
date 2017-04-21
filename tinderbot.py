@@ -64,13 +64,13 @@ class Tinderbot():
         self.log.info("Swiped " + str(count) + " users")
 
     def process_hit(self,user):
-            #save profile pic and id
-            pic_url = user.photos[0]
-            img_data = requests.get(pic_url).content
-            file_loc = self.pwd + "/" + str(user.id) + ".jpg"
-            with open(file_loc, 'wb') as handler:
-                handler.write(img_data)
-            self.log.info(">>>HIT: id: " + str(user.id) + " name: " + user.name + " age: " + str(user.age) + " photoURl: " + pic_url)
+        #save profile pic and id
+        pic_url = user.photos[0]
+        img_data = requests.get(pic_url).content
+        file_loc = self.pwd + "/" + str(user.id) + ".jpg"
+        with open(file_loc, 'wb') as handler:
+            handler.write(img_data)
+        self.log.info(">>>HIT: id: " + str(user.id) + " name: " + user.name + " age: " + str(user.age) + " photoURl: " + pic_url)
 
     def check_pwd(self):
         #change our PWD everyday
@@ -86,6 +86,9 @@ class Tinderbot():
 
 
     def config_logger(self):
+        #remove all existing handlers
+        while len(self.log.handlers) > 0:
+             self.log.removeHandler(self.log.handlers[0])
         #file
         fh = logging.FileHandler(self.pwd + "/log.txt")
         formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s',\
@@ -122,8 +125,12 @@ class Tinderbot():
 
 
 if __name__== "__main__":
-    access_token = "912ef5de-9791-4918-bb3d-eee397066399"
-    fb_id = 1021804951
+    try:
+        from config import access_token, fb_id
+    except ImportError:
+        print("Please create a config.py file. See config.py.example as a guide")
+        sys.exit(0)
+
     loc = 44.942594, -93.191030
     target = "Kim"
     interval = 240

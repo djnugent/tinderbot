@@ -1,0 +1,29 @@
+
+
+
+#YOUR TINDER ACCESS_TOKEN HERE
+access_token = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+#YOUR FACEBOOK ID HERE
+fb_id = nnnnnnnnnn
+
+
+'''
+You can use this function to get you tinder access token. 
+It requires your facebook id and facebook access token.
+def get_auth_token(fb_auth_token, fb_user_id):
+    import requests
+    url = config.host + '/auth'
+    req = requests.post(url,
+        headers=headers,
+        data=json.dumps({'facebook_token': fb_auth_token, 'facebook_id': fb_user_id})
+        )
+    try:
+        tinder_auth_token = req.json()["token"]
+        headers.update({"X-Auth-Token": tinder_auth_token})
+        print("Greetings, you have been authorized!")
+        print(tinder_auth_token)
+    except:
+        print("error": "Something went wrong. Sorry.")
+
+
+'''
